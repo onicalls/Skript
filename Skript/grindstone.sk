@@ -1,0 +1,36 @@
+# Función que cuenta la cantidad de elementos en una string que se pasará a lista.
+# Entrada: string a separar por espacios.
+# Salida: cantidad de elementos en la lista.
+function lenFunction(enchant: text):: number:
+    set {_enchant} to {_enchant}.split(" ")
+    set {_enchantLen} to 0
+    loop 10 times:
+        if {_enchant}[loop-value] is not set:
+            set {_enchantLen} to loop-value
+            stop loop
+    return {_enchantLen}
+
+# Evento que se activa al interactuar con una afiladora.
+on inventory click:
+    if event-inventory is grindstone inventory:
+        set {_target} to slot 2 of event-inventory # Slot del resultado
+        if {_target} is not air:
+            if index of event-slot is 2:
+                if {_target} is set:
+                    set {_item1} to slot 0 of event-inventory
+                    set {_item2} to slot 1 of event-inventory
+                    loop enchantments of {_item1} and {_item2}: 
+                        if player has a book:
+                            # Obtener variables para obtener los encantamientos
+                            set {_enchant} to loop-value.toString().split(" ")
+                            set {_enchantLen} to lenFunction(loop-value.toString())
+                            # Obtener nombre y nivel del encantamiento
+                            set {_enchantName} to {_enchant}[0]
+                            loop {_enchantLen} times:
+                                if loop-value-2 is less than {_enchantLen}-1:
+                                    set {_enchantName} to {_enchantName} + "_" + {_enchant}[loop-value-2] # Se unifica el nombre del encantamiento
+                            set {_enchantNumber} to {_enchant}[{_enchantLen}-1] # Nivel del encantamiento
+                            # Crear libro encantado
+                            remove 1 book from player
+                            set {_enchanted_book} to enchanted book with nbt from "{""minecraft:stored_enchantments"":{""%{_enchantName}%"":%{_enchantNumber}%}}" # Se crea un libro encantado con el encantamiento
+                            drop {_enchanted_book} at player

@@ -1,0 +1,13 @@
+on chat:
+    loop all players:
+        if message contains "%loop-player%":
+            play sound "minecraft:block.bell.use" with pitch 3 to loop-player
+
+on chat:
+    if player is in world "world":
+        set the chat format to "&2[T] &f[player]: [message]"
+    else if player is in world "world_nether":
+        set the chat format to "&c[N] &f[player]: [message]"
+    else if player is in world "world_the_end":
+        set the chat format to "&d[E] &f[player]: [message]"
+    

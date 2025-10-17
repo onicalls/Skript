@@ -1,0 +1,40 @@
+# Requiere SkBee para las partículas
+
+# Función que verifica si hay el bloque necesario para que crezca caña de azúcar con un máximo de 3 bloques de altura
+# Entrada: bloque de caña de azucar
+# Salida: verdadero si puede crecer, falso si no puede crecer
+function growSugarCaneCheck(eventBlock: block) :: boolean:
+    if block 1 or 2 meter below {_eventBlock} is grass block or dirt or sand:
+        if block 1 or 2 meter above {_eventBlock} is air:
+            return true
+    return false
+
+# Función que hace crecer la caña de azúcar
+# Entrada: bloque de caña de azúcar, cantidad de bloques a crecer
+function growSugarCaneAction(eventBlock: block, amount: integer):
+    set block {_amount} meter above {_eventBlock} to sugar cane
+    play sound "item.bone_meal.use" at {_eventBlock}
+    make 8 of composter at {_eventBlock} with offset vector(0.2, 0.2, 0.2)
+
+on rightclick on sugar cane with bone meal:
+    if growSugarCaneCheck(event-block) is true:
+        if block 1 meter above event-block is air:
+            remove 1 bone meal from player's inventory
+            growSugarCaneAction(event-block,1)
+            stop
+        if block 2 meter above event-block is air:
+            remove 1 bone meal from player's inventory
+            growSugarCaneAction(event-block,2)
+
+on dispense of bone meal:
+    if event-block is dispenser:
+        set {_sugarCane} to block 1 meter infront of event-block
+        if {_sugarCane} is sugar cane:
+            if growSugarCaneCheck({_sugarCane}) is true:
+                if block 1 meter above {_sugarCane} is air:
+                    remove 1 bone meal from the inventory of the block
+                    growSugarCaneAction({_sugarCane},1)
+                    stop
+                if block 2 meter above {_sugarCane} is air:
+                    remove 1 bone meal from the inventory of the block
+                    growSugarCaneAction({_sugarCane},2)

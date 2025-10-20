@@ -16,6 +16,7 @@ function growSugarCaneAction(eventBlock: block, amount: integer):
     play sound "item.bone_meal.use" at {_eventBlock}
     make 8 of composter at {_eventBlock} with offset vector(0.2, 0.2, 0.2)
 
+# Evento que permite hacer crecer caña de azúcar al hacer click derecho con polvo de hueso
 on rightclick on sugar cane with bone meal:
     if growSugarCaneCheck(event-block) is true:
         if block 1 meter above event-block is air:
@@ -26,6 +27,7 @@ on rightclick on sugar cane with bone meal:
             remove 1 bone meal from player's inventory
             growSugarCaneAction(event-block,2)
 
+# Evento que permite hacer crecer caña de azúcar al dispensar polvo de hueso
 on dispense of bone meal:
     if event-block is dispenser:
         set {_sugarCane} to block 1 meter infront of event-block

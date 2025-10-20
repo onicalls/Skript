@@ -1,8 +1,10 @@
+# Evento que envía un sonido al jugador si es mencionado en el chat
 on chat:
     loop all players:
         if message contains "%loop-player%":
             play sound "minecraft:block.bell.use" with pitch 3 to loop-player
 
+# Evento que personaliza el formato del chat según el mundo en el que se encuentra el jugador
 on chat:
     if player is in world "world":
         set the chat format to "&2[T] &f[player]: [message]"

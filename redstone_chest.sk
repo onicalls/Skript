@@ -1,22 +1,24 @@
-# Función que envia items a un cofre
-function sendItemToChest2(player: offline player, item: item, itemtype: item type, trap: block):
+# Función que envia items a un cofre cercano conectado por redstone
+# Entradas: jugador, item, tipo de item, cofre
+function sendItemToChest(player: offline player, item: item, itemtype: item type, trap: block):
     loop {chests::*}:
         if inventory of loop-value contains {_itemtype}:
             if loop-value has enough space for {_item}:  
                 send "Se ha enviado: %{_item}%" to {_player}
                 add {_item} to inventory of loop-value
                 remove {_item} from inventory of {_trap}
-                stop
             else:
                 send "No hay suficiente espacio en el cofre para enviar %{_item}%" to {_player}
-                stop
+            stop
 
+# Función que verifica si una lista contiene un objeto
 function listContains(list: objects, search: object) :: boolean:
     loop {_list::*}:
         if loop-value is {_search}:
             return true
     return false
 
+# Función que busca bloques conectados por redstone a partir de un bloque inicial
 function hasRedstone(eventBlock: block):: objects:
     loop blocks in radius 1.5 around {_eventBlock}:
         if loop-block is redstone wire or chest:
@@ -25,13 +27,14 @@ function hasRedstone(eventBlock: block):: objects:
                 hasRedstone(loop-block)
     return {checked::*}
 
-
+# Función que filtra y devuelve solo los cofres de una lista de bloques
 function hasChest(list: objects) :: objects:
     loop {_list::*}:
         if type of loop-value is chest:
             add loop-value to {chests::*}
     return {chests::*}  
 
+# Evento que permite enviar items de un cofre trampa a un cofre cercano al hacer click derecho mientras se está agachado
 on rightclick on trapped chest:
     if player is sneaking:
         clear {checked::*}
@@ -42,4 +45,4 @@ on rightclick on trapped chest:
         loop items in inventory of event-block:
             set {_itemtype} to type of loop-value
             set {_item} to loop-value
-            sendItemToChest2(player, {_item}, {_itemtype}, event-block)
+            sendItemToChest(player, {_item}, {_itemtype}, event-block)

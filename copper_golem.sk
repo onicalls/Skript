@@ -1,0 +1,21 @@
+import:
+    io.papermc.paper.event.entity.ItemTransportingEntityValidateTargetEvent
+
+# Función que envía un ítem a un cofre cercano
+# Entrada: ítem, tipo de ítem, bloque del evento
+function GolemSendItemToChest(item: item, itemtype: item type, eventBlock: block):
+    loop blocks in radius 10 around {_eventBlock}:
+        loop-block is chest or trapped chest
+        inventory of loop-block contains {_itemtype}
+        loop-block has enough space for {_item}
+        add {_item} to inventory of loop-block
+        remove {_item} from inventory of {_eventBlock}
+        stop
+
+# Evento que se activa cuando un golem transporta un ítem
+on ItemTransportingEntityValidateTargetEvent:
+    set {_chest} to event.getBlock()
+    loop items in inventory of {_chest}:
+        set {_itemtype} to type of loop-value
+        set {_item} to loop-value
+        GolemSendItemToChest({_item}, {_itemtype}, {_chest})

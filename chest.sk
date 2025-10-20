@@ -1,4 +1,5 @@
 # Función que envia items a un cofre
+# Entradas: jugador, item, tipo de item, cofre
 function sendItemToChest(player: offline player, item: item, itemtype: item type, eventBlock: block):
     loop blocks in radius 10 around {_eventBlock}:
         if loop-block is chest:
@@ -7,12 +8,12 @@ function sendItemToChest(player: offline player, item: item, itemtype: item type
                     send "Se ha enviado: %{_item}%" to {_player}
                     add {_item} to inventory of loop-block
                     remove {_item} from inventory of {_eventBlock}
-                    stop
                 else:
                     send "No hay suficiente espacio en el cofre para enviar %{_item}%" to {_player}
-                    stop
+                stop
     send "No se ha detectado ningún cofre donde poder enviar %{_item}%." to {_player}
 
+# Evento que permite enviar items de un cofre trampa a un cofre cercano al hacer click derecho mientras se está agachado
 on rightclick on trapped chest:
     if player is sneaking:
         loop items in inventory of event-block:
